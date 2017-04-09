@@ -1,0 +1,85 @@
+<script defer src="main.dart" type="application/dart"></script>
+<script defer src="packages/browser/dart.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
+<div #nav class="fixednav">
+  <div class="innernav">
+    <i #searchbtn (click)="toggleSearchWindow(searchwindow, searchbox)" class="material-icons">search</i>
+    <i #bookmarkbtn class="material-icons">bookmark</i>
+    <i #createbtn class="material-icons">create</i>
+    <i #clearbtn (click)="closeNavbar(menubar, nav)" class="material-icons">clear</i>
+  </div>
+</div>
+<form #myform (ngSubmit)="onSubmit(myform)" method="GET">
+   <select name="q">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="9">9</option>
+      </select>
+   <input type="Submit" value="Guess">
+</form>
+<div #searchwindow class="searchwindow">
+  <div #searchbox class="form-group searchbox">
+    <input [(ngModel)]="searchTerm" (keyup)="onSearch()" type="text" class="form-control" placeholder="Search">
+    <p class="amountofmatches">{{amountOfMatches}} matches found!</p>
+  </div>
+</div>
+<div class="container-fluid">
+  <i #menubar (click)="onSelect(menubar, nav)" class="material-icons" style="position: fixed; font-size: 100px; z-index: 200;">menu</i>
+  <div class="row">
+    <div class="col-lg-12 bg-people" *ngFor="let discussion of discussionsToDisplay">
+      <div class="row" *ngIf="currentGreyUser()">
+        <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs">
+          <div class="greysidecolumn">
+            <i class="material-icons">access_time</i>
+            <p>{{discussion.time}}</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <div class="greymaincolumn">
+            <h1>{{discussion.admin}}</h1>
+            <h3>{{discussion.subject}}</h3>
+          </div>
+        </div>
+        <div class="col-xs-6 visible-xs">
+          <div class="greysidecolumn">
+            <i class="material-icons">access_time</i>
+            <p>{{discussion.time}}</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+          <div class="greysidecolumn">
+            <i class="material-icons">explore</i>
+            <p>Give your opinion</p>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="background-color: #95989A;" *ngIf="!currentGreyUser()">
+        <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs">
+          <div class="whitesidecolumn">
+            <i class="material-icons">access_time</i>
+            <p>{{discussion.time}}</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <div class="whitemaincolumn">
+            <h1>{{discussion.admin}}</h1>
+            <h3>{{discussion.subject}}</h3>
+          </div>
+        </div>
+        <div class="col-xs-6 visible-xs">
+          <div class="whitesidecolumn">
+            <i class="material-icons">access_time</i>
+            <p>{{discussion.time}}</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+          <div class="whitesidecolumn">
+            <i class="material-icons">explore</i>
+            <p>Give your opinion</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
