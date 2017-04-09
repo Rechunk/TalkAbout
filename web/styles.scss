@@ -55,19 +55,20 @@ STYLESHEET STRUCTURE
 /* 2. Search */
 #searchwindow {
   background-color: white;
-  position: fixed;
-  z-index: 1;
   height: 0%;
+  position: fixed;
   width: 100%;
+  z-index: 1;
 }
 
 #searchbox {
-  z-index: 200;
-  position: fixed;
-  top: 50%;
-  opacity: 0;
-  width: 20%;
   left: 40%;
+  opacity: 0;
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  width: 20%;
+  z-index: 200;
   input {
     background-color: grey;
     color: white;
@@ -75,19 +76,18 @@ STYLESHEET STRUCTURE
   p {
     margin-top: 5%;
   }
-  text-align: center;
 }
 /* */
 /* 3. Discussions */
 .greysidecolumn {
-  position: relative;
   padding: 15%;
+  position: relative;
   i {
-    font-size: 600%;
     color: $xdgrey;
-    text-align: center;
     display: block;
+    font-size: 600%;
     margin: 0 auto;
+    text-align: center;
   }
   p {
     color: $xdgrey;
@@ -99,29 +99,29 @@ STYLESHEET STRUCTURE
 
 .greymaincolumn {
   h1 {
+    color: $xdgrey;
     font-family: "Anton";
-    margin-top: 15%;
     font-size: 450%;
     letter-spacing: 5px;
-    color: $xdgrey;
+    margin-top: 15%;
     text-align: center;
   }
   h3 {
-    font-family: "Open Sans Condensed";
     color: $xdgrey;
-    text-align: center;
+    font-family: "Open Sans Condensed";
     font-size: 230%;
+    text-align: center;
   }
 }
 
 .whitesidecolumn {
   padding: 15%;
   i {
-    font-size: 600%;
     color: white;
-    text-align: center;
     display: block;
+    font-size: 600%;
     margin: 0 auto;
+    text-align: center;
   }
   p {
     color: white;
@@ -133,27 +133,27 @@ STYLESHEET STRUCTURE
 
 .whitemaincolumn {
   h1 {
+    color: white;
     font-family: "Anton";
-    margin-top: 15%;
     font-size: 450%;
     letter-spacing: 5px;
-    color: white;
+    margin-top: 15%;
     text-align: center;
   }
   h3 {
-    font-family: "Open Sans Condensed";
     color: white;
-    text-align: center;
+    font-family: "Open Sans Condensed";
     font-size: 230%;
+    text-align: center;
   }
 }
 /* */
 /* 4. Backgrounds */
 .bg-people {
-  background-image: url('greyColorBackground.png');
-  background-repeat: no-repeat;
   background-attachment:fixed;
+  background-image: url('greyColorBackground.png');
   background-position:center bottom;
+  background-repeat: no-repeat;
 }
 
 .bg-grey {
