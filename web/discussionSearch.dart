@@ -1,7 +1,6 @@
 import 'dart:html';
 import "discussion_service.dart";
 import "Discussion.dart";
-import "dart:convert";
 
 List<Discussion> discussionsFromDb = [];
 List<Discussion> discussionsToDisplay = [];
@@ -9,33 +8,57 @@ List<Discussion> matchingDiscussions = [];
 String searchTerm;
 bool currentBoxColorGrey = true;
 
-init(String response) {
-  discussionsFromDb = JSON.decode(response);
+List<Discussion> sampleList = [
+  new Discussion("SBob Gerner",new DateTime.now(), "Politics", "AAALorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor?", comments),
+  new Discussion("Wayne Gerner",new DateTime.now(), "Fun", "AAALorem ipsum dolor sit asdas?", comments),
+  new Discussion("Alice Bazz",new DateTime.now(), "Generic", "BBBing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma?", comments),
+  new Discussion("Tom Fedel",new DateTime.now(), "Tests", "BBBitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore maa rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lo?", comments),
+  new Discussion("Dieter Boot",new DateTime.now(), "Lifestyle", "BBBto duo dolores et eing elit?", comments),
+  new Discussion("Tom Fedel",new DateTime.now(), "Tests", "t vero eos et accusam?", comments)
+];
+
+List<Discussion> removeKeyFromJsonList(var allDiscussions){
+  List<Discussion> converted = [];
+  for (var d in allDiscussions){
+    converted.add(new Discussion(d["admin"], d["time"], d["category"], d["subject"], d["comments"]));
+  }
+  return converted;
+}
+
+populateDiscussionList(var allDiscussions) {
+  discussionsFromDb = removeKeyFromJsonList(allDiscussions);
   discussionsToDisplay = discussionsFromDb;
-  PopulateRow();
+  populateRow();
 }
 
-void clearSearchbox(){
-  InputElement searchbox = querySelector("#searchfield");
-  searchbox.value = "";
-  searchTerm = "";
-  updateAmountOfMatches();
+void populateRow(){
+  getNewRowContent();
+  setNewRowContent();
 }
 
-String getDiscussionHtml(var discussionMap){
+String getNewRowContent(){
+  String newContent = "";
+  for (Discussion d in discussionsToDisplay){
+    print("DISC: $d");
+    newContent += getDiscussionHtml(d);
+  }
+  return newContent;
+}
+
+String getDiscussionHtml(Discussion d){
   changeCurrentBoxColor();
   return '''
   <div class="row ${(currentBoxColorGrey) ? 'bg-grey' : ''}">
   <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs">
     <div class="${(currentBoxColorGrey) ? 'whitesidecolumn' : 'greysidecolumn'}">
       <i class="material-icons">access_time</i>
-      <p>${discussionMap["time"]}</p>
+      <p>${d.time}</p>
     </div>
   </div>
   <div class="col-lg-4 col-md-4 col-sm-4 ${(currentBoxColorGrey) ? 'bg-grey' : ''}">
   <div class="${(currentBoxColorGrey) ? 'whitemaincolumn' : 'greymaincolumn'}">
-      <h1>${discussionMap["admin"]}</h1>
-      <h3>${discussionMap["subject"]}</h3>
+      <h1>${d.admin}</h1>
+      <h3>${d.subject}</h3>
     </div>
   </div>
   <div class="col-lg-4 col-xs-6 ${(currentBoxColorGrey) ? 'bg-grey' : ''}">
@@ -48,6 +71,17 @@ String getDiscussionHtml(var discussionMap){
   ''';
 }
 
+void clearSearchbox(){
+  InputElement searchbox = querySelector("#searchfield");
+  searchbox.value = "";
+  searchTerm = "";
+  updateAmountOfMatches();
+}
+
+void setNewRowContent(){
+  querySelector("#myRow").innerHtml = getNewRowContent();
+}
+
 changeCurrentBoxColor(){
   if (currentBoxColorGrey){
     currentBoxColorGrey = false;
@@ -55,19 +89,6 @@ changeCurrentBoxColor(){
   else {
     currentBoxColorGrey = true;
   }
-}
-
-String getNewRowContent(){
-  String newContent = "";
-  for (Discussion d in discussionsToDisplay){
-    print("DISC: $d");
-    newContent += getDiscussionHtml(d);
-  }
-  return newContent;
-}
-
-void setNewRowContent(){
-  querySelector("#myRow").innerHtml = getNewRowContent();
 }
 
 bool foundAnyMatch(List<Discussion> matchingDiscussions){
@@ -114,15 +135,9 @@ void updateAmountOfMatches(){
 
 void populateMatchingDiscussions(){
   matchingDiscussions = [];
-  List<Discussion> allDiscussions = GetEntryDiscussionsFromDb();
-  for(int i = 0; i < allDiscussions.length; i++){
+  for(int i = 0; i < discussionsFromDb.length; i++){
     if (foundMatchAtCurrentIndex(i)){
-      matchingDiscussions.add(allDiscussions[i]);
+      matchingDiscussions.add(discussionsFromDb[i]);
     }
   }
-}
-
-void PopulateRow(){
-  getNewRowContent();
-  setNewRowContent();
 }

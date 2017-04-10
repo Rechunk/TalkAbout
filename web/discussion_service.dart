@@ -1,4 +1,3 @@
-import "Discussion.dart";
 import "SingleComment.dart";
 import "dart:html";
 import "dart:convert";
@@ -7,11 +6,11 @@ import "dart:convert";
 GetEntryDiscussionsFromDb(){
   var url = "http://localhost:8082/discussionApi/v1/getAllDiscussions";
 
-  getRawJson(String response){
-    return response;
+  getAllDiscussions(String response){
+    return JSON.decode(response);
   }
 
-  return HttpRequest.getString(url).then(getRawJson);
+  return HttpRequest.getString(url).then(getAllDiscussions);
 }
 
 

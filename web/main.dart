@@ -7,8 +7,12 @@ import "discussionSearch.dart";
 import "uiFunctions.dart";
 import "discussion_service.dart";
 
+void SetupEntryDiscussions(){
+  GetEntryDiscussionsFromDb().then(populateDiscussionList);
+}
+
 main() {
-  GetEntryDiscussionsFromDb().then(init);
+  SetupEntryDiscussions();
 
   querySelector("#menubar").onClick.listen((e) {
     openNavbar();
