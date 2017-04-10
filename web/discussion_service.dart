@@ -1,9 +1,9 @@
 import "SingleComment.dart";
 import "dart:html";
 import "dart:convert";
+import "discussionSearch.dart";
 
-
-getEntryDiscussionsFromDb(){
+serviceGetEntryDiscussionsFromDb(){
   var url = "http://localhost:8082/discussionApi/v1/getAllDiscussions";
 
   getAllDiscussions(String response){
@@ -13,6 +13,17 @@ getEntryDiscussionsFromDb(){
   return HttpRequest.getString(url).then(getAllDiscussions);
 }
 
+void serviceSetupMatchingDiscussions(){
+  var url = "http://localhost:8082/discussionApi/v1/getMatchingDiscussions/$searchTerm";
+
+  populateMatchingDiscussionsAndUpdateAmountOfMatches(String response){
+    var l = JSON.decode(response);
+    matchingDiscussions = removeKeyFromJsonList(l);
+    updateAmountOfMatches();
+  }
+
+  HttpRequest.getString(url).then(populateMatchingDiscussionsAndUpdateAmountOfMatches);
+}
 
 
 

@@ -1,7 +1,6 @@
 import 'dart:html';
 import "discussion_service.dart";
 import "Discussion.dart";
-import "dart:convert";
 
 List<Discussion> discussionsFromDb = [];
 List<Discussion> discussionsToDisplay = [];
@@ -32,8 +31,11 @@ populateAndDisplayDiscussionList(var allDiscussions) {
   setNewRowContent();
 }
 
+void setNewRowContent(){
+  querySelector("#myRow").innerHtml = getNewRowContent();
+}
+
 String getNewRowContent(){
-  print(discussionsToDisplay);
   String newContent = "";
   for (Discussion d in discussionsToDisplay){
     newContent += getDiscussionHtml(d);
@@ -67,18 +69,7 @@ String getDiscussionHtml(Discussion d){
   ''';
 }
 
-void clearSearchbox(){
-  InputElement searchbox = querySelector("#searchfield");
-  searchbox.value = "";
-  searchTerm = "";
-  updateAmountOfMatches();
-}
-
-void setNewRowContent(){
-  querySelector("#myRow").innerHtml = getNewRowContent();
-}
-
-changeCurrentBoxColor(){
+void changeCurrentBoxColor(){
   if (currentBoxColorGrey){
     currentBoxColorGrey = false;
   }
@@ -98,21 +89,14 @@ void displayAllDiscussions(){
   discussionsToDisplay = discussionsFromDb;
   print(discussionsFromDb);
   setNewRowContent();
-  updateAmountOfMatches();
 }
 
 void displayDiscussionsWithSearchTerm(){
-  setupMatchingDiscussions();
+  serviceSetupMatchingDiscussions();
 
-  if (!foundAnyMatch(matchingDiscussions)){
-    discussionsToDisplay = discussionsFromDb;
-  }
-  else {
-    discussionsToDisplay = matchingDiscussions;
-  }
+  discussionsToDisplay = matchingDiscussions;
 
   setNewRowContent();
-  updateAmountOfMatches();
 }
 
 bool noMatchingDiscussions(matchAmount){
@@ -126,15 +110,4 @@ void updateAmountOfMatches(){
     outputField.innerHtml = (matches > 1) ? "$matches matches found" : "$matches match found";
   else
     outputField.innerHtml = "";
-}
-
-void setupMatchingDiscussions(){
-  var url = "http://localhost:8082/discussionApi/v1/getMatchingDiscussions/$searchTerm";
-
-  HttpRequest.getString(url).then(populateMatchingDiscussions);
-}
-
-populateMatchingDiscussions(String response){
-  var l = JSON.decode(response);
-  matchingDiscussions = removeKeyFromJsonList(l);
 }

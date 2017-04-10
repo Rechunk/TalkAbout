@@ -8,8 +8,9 @@ import "uiFunctions.dart";
 import "discussion_service.dart";
 
 void setupAndDisplayEntryDiscussions(){
-  getEntryDiscussionsFromDb().then(populateAndDisplayDiscussionList);
+  serviceGetEntryDiscussionsFromDb().then(populateAndDisplayDiscussionList);
 }
+
 void setupUserInteractionBindings(){
   querySelector("#menubar").onClick.listen((e) {
     openNavbar();
@@ -17,7 +18,6 @@ void setupUserInteractionBindings(){
 
   querySelector("#searchBtn").onClick.listen((e) {
     toggleSearchWindow();
-    clearSearchbox();
   });
 
   querySelector("#hidenavbarBtn").onClick.listen((e) {
