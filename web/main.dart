@@ -7,13 +7,10 @@ import "discussionSearch.dart";
 import "uiFunctions.dart";
 import "discussion_service.dart";
 
-void SetupEntryDiscussions(){
-  GetEntryDiscussionsFromDb().then(populateDiscussionList);
+void setupAndDisplayEntryDiscussions(){
+  getEntryDiscussionsFromDb().then(populateAndDisplayDiscussionList);
 }
-
-main() {
-  SetupEntryDiscussions();
-
+void setupUserInteractionBindings(){
   querySelector("#menubar").onClick.listen((e) {
     openNavbar();
   });
@@ -31,6 +28,16 @@ main() {
   querySelector('#searchbox').onKeyUp.listen((KeyboardEvent e) {
     InputElement inputbox = querySelector("#searchfield");
     searchTerm = inputbox.value;
-    displayDiscussionsWithSearchTerm();
+    if (searchTerm != ""){
+      displayDiscussionsWithSearchTerm();
+    }
+    else {
+      displayAllDiscussions();
+    }
   });
+}
+
+main() {
+  setupAndDisplayEntryDiscussions();
+  setupUserInteractionBindings();
 }

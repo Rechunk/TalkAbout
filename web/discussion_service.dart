@@ -3,7 +3,7 @@ import "dart:html";
 import "dart:convert";
 
 
-GetEntryDiscussionsFromDb(){
+getEntryDiscussionsFromDb(){
   var url = "http://localhost:8082/discussionApi/v1/getAllDiscussions";
 
   getAllDiscussions(String response){
@@ -12,6 +12,8 @@ GetEntryDiscussionsFromDb(){
 
   return HttpRequest.getString(url).then(getAllDiscussions);
 }
+
+
 
 
 

@@ -10,12 +10,12 @@ String searchTerm;
 bool currentBoxColorGrey = true;
 
 List<Discussion> sampleList = [
-  new Discussion("SBob Gerner",new DateTime.now(), "Politics", "AAALorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor?", comments),
-  new Discussion("Wayne Gerner",new DateTime.now(), "Fun", "AAALorem ipsum dolor sit asdas?", comments),
-  new Discussion("Alice Bazz",new DateTime.now(), "Generic", "BBBing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma?", comments),
-  new Discussion("Tom Fedel",new DateTime.now(), "Tests", "BBBitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore maa rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lo?", comments),
-  new Discussion("Dieter Boot",new DateTime.now(), "Lifestyle", "BBBto duo dolores et eing elit?", comments),
-  new Discussion("Tom Fedel",new DateTime.now(), "Tests", "t vero eos et accusam?", comments)
+  new Discussion("SBob Gerner", new DateTime.now(), "Politics", "AAALorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor?", comments),
+  new Discussion("Wayne Gerner", new DateTime.now(), "Fun", "AAALorem ipsum dolor sit asdas?", comments),
+  new Discussion("Alice Bazz", new DateTime.now(), "Generic", "BBBing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma?", comments),
+  new Discussion("Tom Fedel", new DateTime.now(), "Tests", "BBBitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore maa rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lo?", comments),
+  new Discussion("Dieter Boot", new DateTime.now(), "Lifestyle", "BBBto duo dolores et eing elit?", comments),
+  new Discussion("Tom Fedel", new DateTime.now(), "Tests", "t vero eos et accusam?", comments)
 ];
 
 List<Discussion> removeKeyFromJsonList(var allDiscussions){
@@ -26,18 +26,14 @@ List<Discussion> removeKeyFromJsonList(var allDiscussions){
   return converted;
 }
 
-populateDiscussionList(var allDiscussions) {
+populateAndDisplayDiscussionList(var allDiscussions) {
   discussionsFromDb = removeKeyFromJsonList(allDiscussions);
   discussionsToDisplay = discussionsFromDb;
-  populateRow();
-}
-
-void populateRow(){
-  getNewRowContent();
   setNewRowContent();
 }
 
 String getNewRowContent(){
+  print(discussionsToDisplay);
   String newContent = "";
   for (Discussion d in discussionsToDisplay){
     newContent += getDiscussionHtml(d);
@@ -98,6 +94,13 @@ bool foundAnyMatch(List<Discussion> matchingDiscussions){
   return true;
 }
 
+void displayAllDiscussions(){
+  discussionsToDisplay = discussionsFromDb;
+  print(discussionsFromDb);
+  setNewRowContent();
+  updateAmountOfMatches();
+}
+
 void displayDiscussionsWithSearchTerm(){
   setupMatchingDiscussions();
 
@@ -116,14 +119,6 @@ bool noMatchingDiscussions(matchAmount){
   return (matchAmount != 0) ? false : true;
 }
 
-bool foundMatchAtCurrentIndex(i){
-  if (!discussionsFromDb[i].admin.contains(searchTerm) && !discussionsFromDb[i].category.contains(searchTerm) &&
-      !discussionsFromDb[i].subject.contains(searchTerm)){
-      return false;
-  }
-  return true;
-}
-
 void updateAmountOfMatches(){
   var outputField = querySelector(".amountofmatches");
   int matches = matchingDiscussions.length;
@@ -134,12 +129,6 @@ void updateAmountOfMatches(){
 }
 
 void setupMatchingDiscussions(){
-  matchingDiscussions = [];
-  for(int i = 0; i < discussionsFromDb.length; i++){
-    if (foundMatchAtCurrentIndex(i)){
-      matchingDiscussions.add(discussionsFromDb[i]);
-    }
-  }
   var url = "http://localhost:8082/discussionApi/v1/getMatchingDiscussions/$searchTerm";
 
   HttpRequest.getString(url).then(populateMatchingDiscussions);
