@@ -1,6 +1,7 @@
 import 'dart:html';
 import "discussion_service.dart";
 import "Discussion.dart";
+import "dart:convert";
 
 List<Discussion> discussionsFromDb = [];
 List<Discussion> discussionsToDisplay = [];
@@ -39,7 +40,6 @@ void populateRow(){
 String getNewRowContent(){
   String newContent = "";
   for (Discussion d in discussionsToDisplay){
-    print("DISC: $d");
     newContent += getDiscussionHtml(d);
   }
   return newContent;
@@ -99,7 +99,7 @@ bool foundAnyMatch(List<Discussion> matchingDiscussions){
 }
 
 void displayDiscussionsWithSearchTerm(){
-  populateMatchingDiscussions();
+  setupMatchingDiscussions();
 
   if (!foundAnyMatch(matchingDiscussions)){
     discussionsToDisplay = discussionsFromDb;
@@ -133,11 +133,19 @@ void updateAmountOfMatches(){
     outputField.innerHtml = "";
 }
 
-void populateMatchingDiscussions(){
+void setupMatchingDiscussions(){
   matchingDiscussions = [];
   for(int i = 0; i < discussionsFromDb.length; i++){
     if (foundMatchAtCurrentIndex(i)){
       matchingDiscussions.add(discussionsFromDb[i]);
     }
   }
+  var url = "http://localhost:8082/discussionApi/v1/getMatchingDiscussions/$searchTerm";
+
+  HttpRequest.getString(url).then(populateMatchingDiscussions);
+}
+
+populateMatchingDiscussions(String response){
+  var l = JSON.decode(response);
+  matchingDiscussions = removeKeyFromJsonList(l);
 }
