@@ -5,10 +5,10 @@ import 'dart:html';
 import "dart:core";
 import "discussionSearch.dart";
 import "uiFunctions.dart";
-import "dart:convert";
+import "discussion_service.dart";
 
-void main() {
-  PopulateRow();
+main() {
+  GetEntryDiscussionsFromDb().then(init);
 
   querySelector("#menubar").onClick.listen((e) {
     openNavbar();
