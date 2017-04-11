@@ -17,16 +17,12 @@ void serviceSetupMatchingDiscussions(){
   var url = "http://localhost:8082/discussionApi/v1/getMatchingDiscussions/$searchTerm";
 
   populateMatchingDiscussionsAndUpdateAmountOfMatches(String response){
-    var l = JSON.decode(response);
-    matchingDiscussions = removeKeyFromJsonList(l);
+    matchingDiscussions = removeKeyFromJsonList(JSON.decode(response));
     updateAmountOfMatches();
   }
 
   HttpRequest.getString(url).then(populateMatchingDiscussionsAndUpdateAmountOfMatches);
 }
-
-
-
 
 List<SingleComment> comments = [
   new SingleComment("Jake", new DateTime.now(), "This is such a boring topic..."),
