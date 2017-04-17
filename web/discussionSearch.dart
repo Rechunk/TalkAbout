@@ -8,15 +8,6 @@ List<Discussion> matchingDiscussions = [];
 String searchTerm;
 bool currentBoxColorGrey = true;
 
-List<Discussion> sampleList = [
-  new Discussion("SBob Gerner", new DateTime.now(), "Politics", "AAALorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor?", comments),
-  new Discussion("Wayne Gerner", new DateTime.now(), "Fun", "AAALorem ipsum dolor sit asdas?", comments),
-  new Discussion("Alice Bazz", new DateTime.now(), "Generic", "BBBing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma?", comments),
-  new Discussion("Tom Fedel", new DateTime.now(), "Tests", "BBBitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore maa rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lo?", comments),
-  new Discussion("Dieter Boot", new DateTime.now(), "Lifestyle", "BBBto duo dolores et eing elit?", comments),
-  new Discussion("Tom Fedel", new DateTime.now(), "Tests", "t vero eos et accusam?", comments)
-];
-
 List<Discussion> removeKeyFromJsonList(var allDiscussions){
   List<Discussion> converted = [];
   for (var d in allDiscussions){
@@ -94,9 +85,7 @@ void displayAllDiscussions(){
 void displayDiscussionsWithSearchTerm(){
   serviceSetupMatchingDiscussions();
 
-  discussionsToDisplay = matchingDiscussions;
-
-  setNewRowContent();
+  print(discussionsToDisplay);
 }
 
 bool noMatchingDiscussions(matchAmount){

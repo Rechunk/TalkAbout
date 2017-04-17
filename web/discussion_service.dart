@@ -16,15 +16,12 @@ serviceGetEntryDiscussionsFromDb(){
 void serviceSetupMatchingDiscussions(){
   var url = "http://localhost:8082/discussionApi/v1/getMatchingDiscussions/$searchTerm";
 
-  populateMatchingDiscussionsAndUpdateAmountOfMatches(String response){
+  updateSearchResultsAndAmountOfMatches(String response){
     matchingDiscussions = removeKeyFromJsonList(JSON.decode(response));
+    discussionsToDisplay = matchingDiscussions;
+    setNewRowContent();
     updateAmountOfMatches();
   }
 
-  HttpRequest.getString(url).then(populateMatchingDiscussionsAndUpdateAmountOfMatches);
+  HttpRequest.getString(url).then(updateSearchResultsAndAmountOfMatches);
 }
-
-List<SingleComment> comments = [
-  new SingleComment("Jake", new DateTime.now(), "This is such a boring topic..."),
-  new SingleComment("Bob", new DateTime.now(), "Wow, I didn't except such a topic to come up here, lol!")
-];

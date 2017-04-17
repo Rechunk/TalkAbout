@@ -6,44 +6,50 @@ import "SingleComment.dart";
 import 'package:sqljocky/sqljocky.dart';
 
 final ApiServer _apiServer = new ApiServer();
-List<Discussion> allDiscussions = [
-  new Discussion("SBob Gerner",new DateTime.now(), "Politics", "AAALorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor?", comments),
-  new Discussion("Wayne Gerner",new DateTime.now(), "Fun", "AAALorem ipsum dolor sit asdas?", comments),
-  new Discussion("Alice Bazz",new DateTime.now(), "Generic", "BBBing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma?", comments),
-  new Discussion("Tom Fedel",new DateTime.now(), "Tests", "BBBitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore maa rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lo?", comments),
-  new Discussion("Dieter Boot",new DateTime.now(), "Lifestyle", "BBBto duo dolores et eing elit?", comments),
-  new Discussion("Tom Fedel",new DateTime.now(), "Tests", "t vero eos et accusam?", comments)
-];
+List<Discussion> allDiscussions = [];
 
 var database = null;
 
-void connectToDatabase(){
+main() async {
   database = new ConnectionPool(
     host: 'localhost', port: 3306,
     user: 'root', password: 'password',
     db: 'angularsite');
-}
-
-main() async {
-  connectToDatabase();
 
   _apiServer.addApi(new DiscussionAPI());
   HttpServer server = await HttpServer.bind("127.0.0.1", 8082);
   server.listen(_apiServer.httpRequestHandler);
 }
 
-getAllDiscussionsFromDb() async {
+getCommentsOfDiscussion(id) async {
 
-  List<Discussion> discussions = [];
+  List<SingleComment> allComments = [];
 
-  List<Discussion> returnDiscussions(List<Discussion> disc){
-    return discussions;
+  List<SingleComment> returnComments(var args) {
+    return allComments;
   }
 
-  var results = await database.query("select * from discussions");
-  return results.forEach((disc){
-    discussions.add(new Discussion(disc[0], disc[1], disc[2], disc[3], comments));
-  }).then(returnDiscussions);
+  var commentsFromDb = await database.query("select * from comments where discussionId = $id");
+  // We have to instantiate actual SingleComment objects from the database columns
+  return commentsFromDb.forEach((comment) async {
+    allComments.add(new SingleComment(comment[0], comment[1], comment[2], comment[3]));
+  }).then(returnComments);
+}
+
+getAllDiscussionsFromDb() async {
+
+  List<Discussion> discussionsToReturn = [];
+
+  var discussionsFromDb = await database.query("select * from discussions");
+  // We have to instantiate actual discussion objects from the database columns
+  await for(var discussion in discussionsFromDb) {
+    int discussionId = discussion[4];
+    var comments;
+    comments = await getCommentsOfDiscussion(discussionId);
+    discussionsToReturn.add(new Discussion(discussion[0], discussion[1], discussion[2], discussion[3], comments));
+  }
+  allDiscussions = discussionsToReturn;
+  return discussionsToReturn;
 }
 
 @ApiClass(
@@ -72,15 +78,20 @@ List<Discussion> getMatchingDiscussions(searchTerm){
   return matchingDiscussions;
 }
 
-bool foundMatchAtCurrentIndex(int i, String searchTerm){
-  if (!allDiscussions[i].admin.contains(searchTerm) && !allDiscussions[i].category.contains(searchTerm) &&
-      !allDiscussions[i].subject.contains(searchTerm)){
-      return false;
+String replaceEntityWithSpace(searchTerm){
+  if (searchTerm.contains("%20")){
+    searchTerm = searchTerm.replaceAllMapped(new RegExp(r'%20'), (match) {
+      return ' ';
+    });
   }
-  return true;
+  return searchTerm;
 }
 
-List<SingleComment> comments = [
-  new SingleComment("Jake", new DateTime.now(), "This is such a boring topic..."),
-  new SingleComment("Bob", new DateTime.now(), "Wow, I didn't except such a topic to come up here, lol!")
-];
+bool foundMatchAtCurrentIndex(int i, String searchTerm){
+  searchTerm = replaceEntityWithSpace(searchTerm);
+  if (allDiscussions[i].admin.contains(searchTerm) || allDiscussions[i].category.contains(searchTerm) ||
+      allDiscussions[i].subject.contains(searchTerm)){
+      return true;
+  }
+  return false;
+}
