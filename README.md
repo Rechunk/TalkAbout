@@ -1,6 +1,6 @@
 # TalkAbout
 
-Dart project for discussing controversial topics
+Dart SPA discussion project (no framework used)
 
 To be added:
 
